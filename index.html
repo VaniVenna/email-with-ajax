@@ -1,0 +1,63 @@
+<html>
+    <head></head>
+    <body>
+        <div id="mailContainerId"></div>
+        <script src="./scripts/leftMenu.js"></script>
+        <script src="./scripts/displayMailItems.js"></script>
+        <script src="./scripts/clickEvents.js"></script>
+    </body>
+    <script>
+        var parentContainer = document.querySelector("#mailContainerId");
+
+        function loadDoc() {
+            var httpRequest = new XMLHttpRequest();
+            httpRequest.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var mailObj = JSON.parse(this.responseText);
+                    console.log(mailObj);
+                    new leftPanel(mailObj, parentContainer);
+                    // var leftMenuItems = new leftPanel(leftMenuItems, parentContainer);
+                }
+            };
+            httpRequest.open("GET", "./JSON/leftMenu.json");
+            httpRequest.send();
+        }
+
+        loadDoc();
+
+        setTimeout (function() {
+            document.querySelector("#menuItems").childNodes.forEach(element => {
+                element.onclick = function (e) {
+                    var mailObj = document.getElementsByClassName("mailBoxParent");
+
+                    if(mailObj) {
+                        for (const iterator in mailObj) {
+                            mailObj[iterator].innerHTML = "";
+                        }
+                    }
+
+                    loadMailItems(e.target.id);
+                }
+            });
+            loadMailItems(1);
+        }, 1000);
+
+        function loadMailItems(id) {
+            // let mailID = "/JSON/"+id+".json";
+            // let mailID = `/JSON/${id}.json`;
+            getFile(id);
+        }
+
+        function getFile(jsonID) {
+            var jsonFileRequest = new XMLHttpRequest();
+            jsonFileRequest.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var jsonObj = JSON.parse(this.responseText);
+                    new displayMailItems(jsonObj, parentContainer);
+                }
+            };
+            jsonFileRequest.open("GET", "/JSON/"+jsonID+".json");
+            jsonFileRequest.send();
+        }
+    </script>
+</html>
