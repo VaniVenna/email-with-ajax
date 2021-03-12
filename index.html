@@ -36,17 +36,11 @@
                         }
                     }
 
-                    loadMailItems(e.target.id);
+                    getFile(e.target.id);
                 }
             });
-            loadMailItems(1);
+            getFile(1);
         }, 1000);
-
-        function loadMailItems(id) {
-            // let mailID = "/JSON/"+id+".json";
-            // let mailID = `/JSON/${id}.json`;
-            getFile(id);
-        }
 
         function getFile(jsonID) {
             var jsonFileRequest = new XMLHttpRequest();
